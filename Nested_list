@@ -1,0 +1,139 @@
+if __name__ == '__main__':
+    students = []
+    for _ in range(int(input())):
+        name = input()
+        score = float(input())
+        students.append([name, score])
+    
+    scores = sorted(set([score for name, score in students]))
+    second_lowest = scores[1]
+    second_lowest_students = [name for name, score in students if score == second_lowest]
+    second_lowest_students.sort()
+    
+    for student in second_lowest_students:
+        print(student)
+
+in C PROGRAMMING
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    char name[100];
+    float score;
+} Student;
+
+int compareScores(const void *a, const void *b) {
+    float diff = ((Student*)a)->score - ((Student*)b)->score;
+    if (diff > 0) return 1;
+    else if (diff < 0) return -1;
+    else return 0;
+}
+
+int compareNames(const void *a, const void *b) {
+    return strcmp(((char*)a), ((char*)b));
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+
+    Student students[n];
+    for (int i = 0; i < n; i++) {
+        scanf("%s", students[i].name);
+        scanf("%f", &students[i].score);
+    }
+
+    // Sort students by score
+    qsort(students, n, sizeof(Student), compareScores);
+
+    // Find the second lowest score
+    float lowest = students[0].score;
+    float second_lowest = -1;
+    for (int i = 1; i < n; i++) {
+        if (students[i].score > lowest) {
+            second_lowest = students[i].score;
+            break;
+        }
+    }
+
+    // Collect names with second lowest score
+    char names[n][100];
+    int count = 0;
+    for (int i = 0; i < n; i++) {
+        if (students[i].score == second_lowest) {
+            strcpy(names[count++], students[i].name);
+        }
+    }
+
+    // Sort names alphabetically
+    qsort(names, count, sizeof(names[0]), compareNames);
+
+    // Print names
+    for (int i = 0; i < count; i++) {
+        printf("%s\n", names[i]);
+    }
+
+    return 0;
+}
+
+
+IN JAVA
+
+import java.util.*;
+
+public class SecondLowestGrade {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+
+        List<Student> students = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String name = scanner.nextLine();
+            float score = Float.parseFloat(scanner.nextLine());
+            students.add(new Student(name, score));
+        }
+
+        // Extract unique scores and sort them
+        Set<Float> scoresSet = new HashSet<>();
+        for (Student s : students) {
+            scoresSet.add(s.score);
+        }
+        List<Float> scores = new ArrayList<>(scoresSet);
+        Collections.sort(scores);
+
+        float secondLowest = scores.get(1);
+
+        // Filter students with the second lowest score
+        List<String> secondLowestStudents = new ArrayList<>();
+        for (Student s : students) {
+            if (s.score == secondLowest) {
+                secondLowestStudents.add(s.name);
+            }
+        }
+
+        // Sort names alphabetically
+        Collections.sort(secondLowestStudents);
+
+        // Print names
+        for (String name : secondLowestStudents) {
+            System.out.println(name);
+        }
+
+        scanner.close();
+    }
+
+    static class Student {
+        String name;
+        float score;
+
+        Student(String name, float score) {
+            this.name = name;
+            this.score = score;
+        }
+    }
+}
+
